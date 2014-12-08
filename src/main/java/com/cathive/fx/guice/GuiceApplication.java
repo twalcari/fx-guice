@@ -16,14 +16,6 @@
 
 package com.cathive.fx.guice;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.util.*;
-
-import com.google.inject.Provider;
-import javafx.application.Application;
-
 import com.cathive.fx.guice.fxml.FXMLLoadingModule;
 import com.cathive.fx.guice.prefs.PersistentPropertyModule;
 import com.cathive.fx.guice.thread.FxApplicationThreadModule;
@@ -31,6 +23,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import javafx.application.Application;
+
+import javax.inject.Provider;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 /**
  * A simple replacement for the default JavaFX Application class that utilizes

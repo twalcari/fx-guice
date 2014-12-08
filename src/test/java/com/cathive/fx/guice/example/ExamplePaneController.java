@@ -16,57 +16,52 @@
 
 package com.cathive.fx.guice.example;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
-
-import com.cathive.fx.guice.FXMLController;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * @author Benjamin P. Jung
  */
-@FXMLController
-public class ExamplePaneController implements Initializable {
+public class ExamplePaneController {
 
-	private List<String> methodCalls = new ArrayList<>();
+    private List<String> methodCalls = new ArrayList<>();
 
-	private boolean initialized = false;
-	private boolean injected = false;
+    private boolean initialized = false;
+    private boolean injected = false;
 
-	@FXML private AnchorPane rootPane;
+    @FXML
+    private AnchorPane rootPane;
 
-	@Inject private void postConstruct() {
-		methodCalls.add("postConstruct()");
-		this.injected = true;
-	}
+    @Inject
+    private void postConstruct() {
+        methodCalls.add("postConstruct()");
+        this.injected = true;
+    }
 
-	@Override public void initialize(URL url, ResourceBundle rb) {
-		methodCalls.add("initialize(java.net.URL, java.util.ResourceBundle)");
-		this.initialized = true;
-	}
+    @FXML
+    private void initialize() {
+        methodCalls.add("initialize()");
+        this.initialized = true;
+    }
 
-	public boolean isInitialized() {
-		return this.initialized;
-	}
+    public boolean isInitialized() {
+        return this.initialized;
+    }
 
-	public boolean isInjected() {
-		return this.injected;
-	}
+    public boolean isInjected() {
+        return this.injected;
+    }
 
-	public List<String> getMethodCalls() {
-		return this.methodCalls;
-	}
+    public List<String> getMethodCalls() {
+        return this.methodCalls;
+    }
 
-	public AnchorPane getRootPane() {
-		return this.rootPane;
-	}
+    public AnchorPane getRootPane() {
+        return this.rootPane;
+    }
 
 }

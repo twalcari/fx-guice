@@ -17,19 +17,15 @@
 package com.cathive.fx.guice.fxml;
 
 import com.cathive.fx.guice.FXMLComponent;
-import com.cathive.fx.guice.FXMLController;
 import com.cathive.fx.guice.GuiceFXMLLoader;
-import com.cathive.fx.guice.controllerlookup.ControllerLookup;
 import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
 import com.google.inject.Module;
-import com.google.inject.Provider;
+import com.google.inject.Scopes;
 import com.google.inject.matcher.Matchers;
 
 /**
- * {@link Module} enabling interaction between multiple controllers loaded in
- * one control.
- * 
+ * {@link Module} enabling custom controllers being loaded.
+ *
  * @author Andy Till
  * @author Benjamin P. Jung
  */
@@ -42,20 +38,10 @@ public final class FXMLLoadingModule extends AbstractModule {
     @Override
     protected void configure() {
 
-        // FXMLLoadingScope
-        final FXMLLoadingScope fxmlLoadingScope = new FXMLLoadingScope();
-        bind(FXMLLoadingScope.class).toInstance(fxmlLoadingScope);
-        bindScope(FXMLController.class, fxmlLoadingScope);
-        bindScope(FXMLComponent.class, fxmlLoadingScope);
+        bindScope(FXMLComponent.class, Scopes.NO_SCOPE);
 
         // GuiceFXMLLoader
         bind(GuiceFXMLLoader.class);
-
-        // FXMLControllerTypeListener
-        final FXMLControllerTypeListener fxmlControllerTypeListener = new FXMLControllerTypeListener();
-        requestInjection(fxmlControllerTypeListener);
-        bind(FXMLControllerTypeListener.class).toInstance(fxmlControllerTypeListener);
-        bindListener(Matchers.any(), fxmlControllerTypeListener);
 
         // FXMLComponentTypeListener
         final FXMLComponentTypeListener fxmlComponentTypeListener = new FXMLComponentTypeListener();
@@ -63,25 +49,5 @@ public final class FXMLLoadingModule extends AbstractModule {
         bind(FXMLComponentTypeListener.class).toInstance(fxmlComponentTypeListener);
         bindListener(Matchers.any(), fxmlComponentTypeListener);
 
-        // ControllerLookup
-        bind(ControllerLookup.class).toProvider(new ControllerLookupProvider(fxmlLoadingScope));
-
     }
-
-
-    private final class ControllerLookupProvider implements Provider<ControllerLookup> {
-        private final FXMLLoadingScope fxmlLoadingScope;
-        private ControllerLookupProvider(final FXMLLoadingScope fxmlLoadingScope) {
-            super();
-            this.fxmlLoadingScope = fxmlLoadingScope;
-        }
-        @Override
-        public ControllerLookup get() {
-            if (!fxmlLoadingScope.isActive()) {
-                throw new IllegalStateException("A ControllerLookup instance cannot be injected while outside of the FXML Loading scope.");
-            }
-            return new ControllerLookup(fxmlLoadingScope.getIdentifiables());
-        }
-    }
-
 }

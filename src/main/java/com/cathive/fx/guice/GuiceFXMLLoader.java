@@ -16,21 +16,19 @@
 
 package com.cathive.fx.guice;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ResourceBundle;
-
+import com.cathive.fx.guice.fxml.FXMLComponentBuilderFactory;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.util.Callback;
 
-import com.cathive.fx.guice.fxml.FXMLComponentBuilderFactory;
-import com.cathive.fx.guice.fxml.FXMLLoadingScope;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ResourceBundle;
 
 /**
  * If you want to `guicify` your JavaFX experience you can use an instance of
@@ -49,36 +47,22 @@ public class GuiceFXMLLoader {
     private final Injector injector;
 
     /**
-     * The loading scope that is being entered when loading FXML files.
-     */
-    private final FXMLLoadingScope fxmlLoadingScope;
-
-    /**
      * This constructor is usually never called directly.
      * <p>Instead use an existing {@link com.google.inject.Injector} instance
      * to fetch an instance of this class.</p>
      * @param injector
      *              Usually injected via Guice.
-     * @param fxmlLoadingScope
-     *              Usually injected via Guice.
      * @throws IllegalArgumentException
      *              if you try to pass a {@code null} value as
      *              injector instance.
-     * @throws IllegalStateException
-     *              if the injector has no binding for the {@link FXMLController}
-     *              loading scope.
      */
     @Inject
-    public GuiceFXMLLoader(final Injector injector, final FXMLLoadingScope fxmlLoadingScope) {
+    public GuiceFXMLLoader(final Injector injector) {
         super();
         if (injector == null) {
             throw new IllegalArgumentException("The Injector instance must not be null.");
         }
-        if (!injector.getScopeBindings().containsKey(FXMLController.class)) {
-            throw new IllegalStateException("FXMLController loading scope is not bound in your Injector.");
-        }
         this.injector = injector;
-        this.fxmlLoadingScope = fxmlLoadingScope;
     }
 
     /**
@@ -99,8 +83,6 @@ public class GuiceFXMLLoader {
      */
     public Result load(final URL url, final ResourceBundle resources) throws IOException  {
 
-        fxmlLoadingScope.enter(this);
-
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(url);
         if (resources != null) {
@@ -116,7 +98,7 @@ public class GuiceFXMLLoader {
             }
         });
 
-        final Node root = (Node) loader.load(url.openStream());
+        final Node root = loader.load(url.openStream());
 
         // Prepares the result that is being returned after loading the FXML hierarchy.
         final Result result = new Result();
@@ -126,10 +108,7 @@ public class GuiceFXMLLoader {
         result.root.set(root);
         result.charset.set(loader.getCharset());
 
-        fxmlLoadingScope.exit();
-
         return result;
-
     }
 
     /**

@@ -16,11 +16,8 @@
 
 package com.cathive.fx.guice.example;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javax.inject.Inject;
-
+import com.cathive.fx.guice.FXMLComponent;
+import com.google.inject.Injector;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
@@ -28,8 +25,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import com.cathive.fx.guice.FXMLComponent;
-import com.google.inject.Injector;
+import javax.inject.Inject;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Example component to demonstrate and test the usage of the
@@ -60,7 +58,8 @@ public final class SimpleFXMLComponent extends VBox {
         return this.injector;
     }
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         this.initialized = true;
     }
 

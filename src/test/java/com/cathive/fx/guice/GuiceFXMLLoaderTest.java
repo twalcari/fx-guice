@@ -16,25 +16,19 @@
 
 package com.cathive.fx.guice;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-import java.util.ResourceBundle;
-
+import com.cathive.fx.guice.example.ExamplePaneController;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.cathive.fx.guice.example.ExamplePaneController;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static org.testng.Assert.*;
 
 /**
  * 
@@ -69,7 +63,7 @@ public class GuiceFXMLLoaderTest {
     @Test(description = "Assert that an instance of the GuiceFXMLLoader without an Injector instance cannot be created", expectedExceptions = IllegalArgumentException.class)
     public void instantiationViaConstructorTest() throws Exception {
         // Constructor call with null arguments must fail!
-        new GuiceFXMLLoader(null, null);
+        new GuiceFXMLLoader(null);
     }
 
     @Test(dependsOnMethods = "instantiationViaConstructorTest")
@@ -109,7 +103,7 @@ public class GuiceFXMLLoaderTest {
         assertTrue(ctrl.isInitialized());
         assertNotNull(ctrl.getRootPane());
         assertEquals(ctrl.getRootPane(), pane);
-        assertTrue(ctrl.getMethodCalls().contains("initialize(java.net.URL, java.util.ResourceBundle)"));
+        assertTrue(ctrl.getMethodCalls().contains("initialize()"));
         assertEquals(ctrl.getMethodCalls().size(), 2);
 
     }

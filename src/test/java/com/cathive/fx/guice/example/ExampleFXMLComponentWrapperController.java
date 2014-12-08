@@ -1,17 +1,14 @@
 package com.cathive.fx.guice.example;
 
+import com.google.inject.Injector;
 import javafx.fxml.FXML;
 
 import javax.inject.Inject;
-
-import com.cathive.fx.guice.FXMLController;
-import com.google.inject.Injector;
 
 /**
  * 
  * @author Benjamin P. Jung
  */
-@FXMLController
 public class ExampleFXMLComponentWrapperController {
 
     @Inject private Injector injector;
